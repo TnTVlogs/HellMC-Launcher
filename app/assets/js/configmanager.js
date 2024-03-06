@@ -84,6 +84,8 @@ const DEFAULT_CONFIG = {
             launchDetached: true
         },
         launcher: {
+            resWidth: 1920,
+            resHeight: 1080,
             allowPrerelease: false,
             dataDirectory: dataPath
         }

@@ -97,12 +97,13 @@ async function showMainUI(data){
         }
 
         setTimeout(() => {
-            $('#loadingContainer').fadeOut(500, () => {
+            $('#loadingContainer').fadeOut(250, () => {
                 $('#loadSpinnerImage').removeClass('rotating')
             })
-        }, 250)
+        }, 150)
         
-    }, 750)
+    }, 8000 )
+
     // Disable tabbing to the news container.
     initNews().then(() => {
         $('#newsContainer *').attr('tabindex', '-1')
@@ -111,7 +112,7 @@ async function showMainUI(data){
 
 function showFatalStartupError(){
     setTimeout(() => {
-        $('#loadingContainer').fadeOut(250, () => {
+        $('#loadingContainer').fadeOut(5050, () => {
             document.getElementById('overlayContainer').style.background = 'none'
             setOverlayContent(
                 Lang.queryJS('uibinder.startup.fatalErrorTitle'),
