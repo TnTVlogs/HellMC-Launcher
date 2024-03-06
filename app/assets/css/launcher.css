@@ -483,19 +483,20 @@ body, button {
 
 /* Logo on login form. */
 #loginImageSeal {
-    background: rgba(1, 2, 1, 0.5);
-    width: 125px;
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    margin-bottom: 20px;
+    background: rgb(2 2 2 / 0%);
+    width: 263px;
+    box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 0%);
+    margin-bottom: 54px;
 }
 
 /* Header on login view. */
 #loginSubheader {
     font-family: 'Avenir Medium';
-    margin-bottom: 25px;
+    margin-bottom: -2px;
     font-size: 12px;
     letter-spacing: 1px;
     font-weight: bold;
+    margin-left: -135px;
 }
 
 /* Container to organize login field elements. */
@@ -505,6 +506,7 @@ body, button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: -15px;
 }
 
 /* SVG icons on the login view. */
@@ -512,22 +514,22 @@ body, button {
     fill: #fff;
     height: 20px;
     width: 20px;
+    margin-right: 193px;
 }
 
 /* Span which displays errors related to login field content. */
 .loginErrorSpan {
     font-family: 'Avenir Medium';
     font-weight: bold;
-    font-size: 8px;
-    color: #ff1b0c;
+    font-size: 12px;
+    color: #ff0000;
     width: 100%;
-    text-align: right;
+    text-align: left;
     position: absolute;
-    top: 7px;
+    top: 36px;
     opacity: 0;
     transition: 0.25s ease;
 }
-
 .shake {
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
 }
@@ -553,8 +555,8 @@ body, button {
 /* Login text input styles. */
 .loginField {
     font-family: 'Avenir Book';
-    background: none;
-    border-width: 1.5px 0px 0px 0px;
+    background: #ffffff42;
+    border-width: 1.5px 1.5x 1.5px 1.5px;
     border-style: solid;
     width: 250px;
     margin-bottom: 20px;
@@ -563,9 +565,11 @@ body, button {
     font-weight: bold;
     text-align: center;
     box-sizing: border-box;
-    padding: 7.5px;
-    font-size: 10px;
+    padding: 4.5px;
+    font-size: 14px;
     letter-spacing: 1px;
+    border-radius: 8px;
+    box-shadow: rgb(0 0 0 / 45%) 0px -23px 25px 0px inset, rgb(0 0 0 / 37%) 0px -36px 30px 0px inset, rgb(0 0 0 / 45%) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
 .loginField:focus {
     outline: none;
@@ -594,27 +598,37 @@ body, button {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    margin-top: 12px;
 }
 
 /* Remember option text. */
 #loginRememberText {
     padding-right: 10px;
     transition: 0.25s ease;
+    margin-left: 12px;
 }
 
 /* Login button styles. */
+
+element.style {
+}
+#loginButton:disabled {
+    color: rgba(255, 255, 255, 0.75);
+    pointer-events: none;
+}
 #loginButton {
     background: none;
     font-weight: bold;
     letter-spacing: 2px;
     border: none;
-    padding: 15px 5px;
-    margin: 10px 0px;
+    padding: 19px 26px;
+    margin: 15px 0px;
     cursor: pointer;
     position: relative;
-    right: -20px;
+    right: -8px;
+    font-size: 18px;
     transition: 0.5s ease;
-}
+    }
 #loginButton:disabled {
     color: rgba(255, 255, 255, 0.75);
     pointer-events: none;
@@ -2445,6 +2459,8 @@ input:checked + .toggleSwitchSlider:before {
     transition: background 2s ease;
     overflow-y: hidden;
 }
+
+
 
 /* Upper content container. */
 #landingContainer > #upper {

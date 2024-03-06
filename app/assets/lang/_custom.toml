@@ -1,5 +1,3 @@
-# Custom Language File for Launcher Customizer
-
 [ejs.app]
 title = "Lunex Launcher"
 
@@ -16,6 +14,11 @@ sourceGithubLink = "https://github.com/ci2bx/LunexLauncher"
 supportLink = "https://github.com/ci2bx/LunexLauncher/issues"
 
 [ejs.welcome]
-welcomeHeader = "BIENVENUE SUR LUNEX"
-welcomeDescription = "Rejoignez une communauté de joueurs passionnés par Minecraft et qui n'hésiteront pas à repousser les limites du jeu."
-welcomeDescCTA = "Vous êtes a quelques clics de Lunex."
+welcomeHeader = "BEM-VINDO AO ZSMP"
+welcomeDescription = """
+Bem-vindo ao ZSMP, onde sua aventura no Minecraft começa! Mergulhe em um mundo de possibilidades infinitas e experiências inesquecíveis no melhor servidor SMP que você pode imaginar. Junte-se à nossa vibrante comunidade de jogadores e embarque em missões épicas, construa criações incríveis e forje amizades duradouras.
+
+Mas espera, tem mais! Para participar da diversão, basta entrar no nosso servidor do Discord para se auto-inscrever e ter acesso ao nosso reino exclusivo de emoções. Seja você um explorador experiente ou um construtor novato, o ZSMP dá as boas-vindas a jogadores de todos os níveis de habilidade.
+
+Então, o que você está esperando? Clique em "Continuar" e deixe as aventuras começarem!
+"""

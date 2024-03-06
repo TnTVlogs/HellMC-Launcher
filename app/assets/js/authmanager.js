@@ -15,50 +15,42 @@ const { RestResponseStatus } = require('helios-core/common')
 const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('helios-core/mojang')
 const { MicrosoftAuth, microsoftErrorDisplayable, MicrosoftErrorCode } = require('helios-core/microsoft')
 const { AZURE_CLIENT_ID }    = require('./ipcconstants')
+const uuid = require('uuid');
+const crypto = require('crypto');
+
 
 const log = LoggerUtil.getLogger('AuthManager')
 
 // Functions
 
 /**
- * Add a Mojang account. This will authenticate the given credentials with Mojang's
+ * Add a Mojang account. This will authenticate the given username with Mojang's
  * authserver. The resultant data will be stored as an auth account in the
  * configuration database.
  * 
  * @param {string} username The account username (email if migrated).
- * @param {string} password The account password.
  * @returns {Promise.<Object>} Promise which resolves the resolved authenticated account object.
  */
-exports.addAccount = async function(username, password){
+exports.addAccount = async function(username) {
     try {
-        if(username.endsWith('.lunex')){
-            let c = '';
-            for (let d = 0; d < 10; d++) {
-                c += 'abcdefghijklmnopqrstuvwxyz1234567890'[Math.floor(Math.random() * 'abcdefghijklmnopqrstuvwxyz1234567890'.length)];
-            }
-            const ret = ConfigManager.addMojangAuthAccount('nope_' + c, 'sry', username, username)
-            if(ConfigManager.getClientToken() == null){
-                ConfigManager.setClientToken('sry')
-            }
-            ConfigManager.save()
-            return ret
-        }else{
-            const session = await Mojang.authenticate(username, password, ConfigManager.getClientToken())
-            if(session.selectedProfile != null){
-                const ret = ConfigManager.addMojangAuthAccount(session.selectedProfile.id, session.accessToken, username, session.selectedProfile.name)
-                if(ConfigManager.getClientToken() == null){
-                    ConfigManager.setClientToken(session.clientToken)
-                }
-                ConfigManager.save()
-                return ret
-            } else {
-                throw new Error('NotPaidAccount')
-            }
+        let userId = null;
+
+        // Gerar um UUID baseado no hash MD5 do nome de usuário
+        const hash = crypto.createHash('md5');
+        hash.update(username);
+        userId = hash.digest('hex');
+        
+        const ret = ConfigManager.addMojangAuthAccount(userId, 'sry', username, username);
+        if (ConfigManager.getClientToken() == null) {
+            ConfigManager.setClientToken('sry');
         }
-    } catch (err){
-        return Promise.reject(err)
+        ConfigManager.save();
+        return ret;
+
+    } catch (err) {
+        return Promise.reject(err);
     }
-}
+};
 
 const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
 

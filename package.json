@@ -37,7 +37,8 @@
     "jquery": "^3.7.1",
     "lodash.merge": "^4.6.2",
     "semver": "^7.5.4",
-    "toml": "^3.0.0"
+    "toml": "^3.0.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "electron": "^26.3.0",
