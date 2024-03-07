@@ -590,7 +590,7 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
             })
             .finally(() => {
                 if(!isLastAccount) {
-                    switchView(getCurrentView(), VIEWS.settings, 500, 500)
+                    switchView(getCurrentView(), VIEWS.loginOptions, 500, 500)
                 }
             })
 

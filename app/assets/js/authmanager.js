@@ -158,23 +158,17 @@ exports.addMicrosoftAccount = async function(authCode) {
  * @param {string} uuid The UUID of the account to be removed.
  * @returns {Promise.<void>} Promise which resolves to void when the action is complete.
  */
-exports.removeMojangAccount = async function(uuid){
+exports.removeMojangAccount = function(uuid) {
     try {
-        const authAcc = ConfigManager.getAuthAccount(uuid)
-        const response = await MojangRestAPI.invalidate(authAcc.accessToken, ConfigManager.getClientToken())
-        if(response.responseStatus === RestResponseStatus.SUCCESS) {
-            ConfigManager.removeAuthAccount(uuid)
-            ConfigManager.save()
-            return Promise.resolve()
-        } else {
-            log.error('Error while removing account', response.error)
-            return Promise.reject(response.error)
-        }
-    } catch (err){
-        log.error('Error while removing account', err)
-        return Promise.reject(err)
+        ConfigManager.removeAuthAccount(uuid);
+        ConfigManager.save();
+        return Promise.resolve();
+    } catch (err) {
+        log.error('Error while removing account', err);
+        return Promise.reject(err);
     }
 }
+
 
 /**
  * Remove a Microsoft account. It is expected that the caller will invoke the OAuth logout
