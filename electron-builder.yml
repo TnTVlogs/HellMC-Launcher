@@ -1,8 +1,8 @@
-appId: 'lunexlauncher'
-productName: 'Lunex Launcher'
+appId: 'HastaStudiosLauncher'
+productName: 'Hasta Studios Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2018-2022 Daniel Scalzi'
+copyright: 'Copyright © 2024 Hasta Studios'
 
 asar: true
 compression: 'maximum'
@@ -39,10 +39,10 @@ mac:
 # Linux Configuration
 linux: 
   target: 'AppImage'
-  maintainer: 'Daniel Scalzi'
-  vendor: 'Daniel Scalzi'
-  synopsis: 'Modded Minecraft Launcher'
-  description: 'Custom launcher which allows users to join modded servers. All mods, configurations, and updates are handled automatically.'
+  maintainer: 'Shisuys'
+  vendor: 'Haasta Studios Launcher'
+  synopsis: 'A minecraft launcher'
+  description: 'Custom launcher made by shisuys, to support all Hasta Studios Projects.'
   category: 'Game'
 
 

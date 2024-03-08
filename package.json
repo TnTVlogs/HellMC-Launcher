@@ -3,11 +3,11 @@
   "version": "1.2.0",
   "productName": "Hasta studios",
   "description": "Hasta studios launcher",
-  "author": "Shisuys)",
+  "author": "Shisuys",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/LunexMC/LunexLauncher",
+  "homepage": "https://github.com/Shisuiicaro/Hasta-studios-Launcher",
   "bugs": {
-    "url": "https://github.com/LunexMC/LunexLauncher/issues"
+    "url": "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
   },
   "private": true,
   "main": "index.js",
@@ -47,6 +47,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LunexMC/LunexLauncher.git"
+    "url": "git+https://github.com/Shisuiicaro/Hasta-studios-Launcher.git"
   }
 }
