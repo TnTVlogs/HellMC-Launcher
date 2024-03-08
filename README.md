@@ -5,11 +5,6 @@
 # Hasta Studios Launcher
 A Custom Launcher for all Hasta Studios Projects. 
 
-
-![Launcher img](https://cdn.discordapp.com/attachments/1156697983887343730/1215732713760227348/image.png?ex=65fdd252&is=65eb5d52&hm=99c8811ace7059f326fc9811a13b3156fd37af45f75e53666acdcb9a4a15d1ff&)
-
-![Launcher img2](https://cdn.discordapp.com/attachments/1156697983887343730/1215733112924012634/image.png?ex=65fdd2b1&is=65eb5db1&hm=f690ecc9ad6694ff16307e50ae8f719cc724e5f5fea7cf83fb4d78d694953ef4&)
-
 ![Launcher img](https://cdn.discordapp.com/attachments/1156697983887343730/1215732713760227348/image.png?ex=65fdd252&is=65eb5d52&hm=99c8811ace7059f326fc9811a13b3156fd37af45f75e53666acdcb9a4a15d1ff&)
 
 ![Launcher img2](https://cdn.discordapp.com/attachments/1156697983887343730/1215733112924012634/image.png?ex=65fdd2b1&is=65eb5db1&hm=f690ecc9ad6694ff16307e50ae8f719cc724e5f5fea7cf83fb4d78d694953ef4&)
