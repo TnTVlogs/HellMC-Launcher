@@ -1065,6 +1065,38 @@ element.style {
     transition: background-color 0.25s cubic-bezier(.02, .01, .47, 1);
 }
 
+.enviarSkinButton {
+    margin: 10px;
+    padding: 5px 25px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    border-radius: 3px;
+    display: block;
+    border: 0px;
+    font-weight: 700;
+    box-shadow: 0px 0px 14px -7px #cb00ff;
+    background-image: linear-gradient(45deg, #8000ff 0%, #9800b3 51%, #9f00ff 100%);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.enviarSkinButton:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.enviarSkinButton:active {
+  transform: scale(0.95);
+}
+
+
 /* Drop shadow displayed when content is scrolled out of view. */
 #settingsContainer:before {
     content: '';
@@ -1559,9 +1591,9 @@ input:checked + .toggleSwitchSlider:before {
 /* Auth account shared styles. */
 .settingsAuthAccount {
     display: flex;
-    background: rgba(0, 0, 0, 0.25);
     border-radius: 3px;
-    border: 1px solid rgba(126, 126, 126, 0.57);
+    border: 1px solid rgb(126 126 126);
+    background-image: linear-gradient(45deg, #3b0051b5, #000000b5);
 }
 
 /* Left hand side of an auth account element, for the skin image. */
@@ -2491,8 +2523,7 @@ input:checked + .toggleSwitchSlider:before {
 #landingContainer > #lower {
     height: 23%;
     display: flex;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-}
+  background: linear-gradient(to top, rgb(180 0 231 / 33%), rgba(0, 0, 0, 0));
 #landingContainer > #lower > #left {
     position: relative;
     transition: top 2s ease;
@@ -2991,6 +3022,14 @@ input:checked + .toggleSwitchSlider:before {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    position: relative;
+}
+
+#usericon{
+position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Avatar edit overlay. */
@@ -3549,7 +3588,7 @@ input:checked + .toggleSwitchSlider:before {
     /*height: 35%;*/
     box-sizing: border-box;
     padding: 15px 0px;
-    /* background-color: #424242; */
+    /* background-color: 8900b3; */
     text-align: center;
 }
 

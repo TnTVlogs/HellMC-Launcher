@@ -163,11 +163,6 @@ function updateSelectedAccount(authUser){
                 username = "🥔" + authUser.displayName;
             }
         }
-
-
-        if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://minotar.net/helm/${authUser.displayName}')`
-        }
     }
     user_text.innerHTML = username
 }

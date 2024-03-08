@@ -1379,7 +1379,6 @@ function bindMinMaxRam(server) {
     settingsMinRAMRange.setAttribute('max', SETTINGS_MAX_MEMORY)
     settingsMinRAMRange.setAttribute('min', SETTINGS_MIN_MEMORY)
 }
-
 /**
  * Prepare the Java tab for display.
  */
@@ -1577,6 +1576,30 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var enviarSkinButton = document.getElementById('enviarSkinButton');
+    if (enviarSkinButton) {
+        enviarSkinButton.addEventListener('click', function() {
+            openSkinUploader();
+        });
+    }
+});
+
+var skinUploaderWindow;
+
+function openSkinUploader() {
+    var url = 'https://zsmpskinserver.000webhostapp.com/index.html';
+    skinUploaderWindow = window.open(url, '_blank', 'width=600,height=900');
+    
+    // Verifica periodicamente se a URL mudou para upload_skin.php
+    var checkURLChange = setInterval(function() {
+        if (skinUploaderWindow && skinUploaderWindow.location.href.includes('upload_skin.php')) {
+            clearInterval(checkURLChange);
+            skinUploaderWindow.close();
+        }
+    }, 1000);
 }
 
 // Prepare the settings UI on startup.
