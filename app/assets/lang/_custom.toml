@@ -1,17 +1,17 @@
 [ejs.app]
-title = "Lunex Launcher"
+title = "Hasta Studios Launcher"
 
 [ejs.landing]
-mediaGitHubURL = "https://github.com/ci2bx/LunexLauncher"
+mediaGitHubURL = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
 mediaTwitterURL = "#"
 mediaInstagramURL = "#"
 mediaWebsiteURL = "https://www.lunexmc.fr/"
-mediaYouTubeURL = "https://www.lunexmc.fr/boutique"
-mediaDiscordURL = "https://discord.com/invite/Fm9NNVzqxx"
+mediaYouTubeURL = "https://www.tiktok.com/@_zsmp_"
+mediaDiscordURL = "https://discord.gg/zsmp"
 
 [ejs.settings]
-sourceGithubLink = "https://github.com/ci2bx/LunexLauncher"
-supportLink = "https://github.com/ci2bx/LunexLauncher/issues"
+sourceGithubLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
+supportLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
 
 [ejs.welcome]
 welcomeHeader = "BEM-VINDO AO ZSMP"
