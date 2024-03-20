@@ -147,21 +147,15 @@ function updateSelectedAccount(authUser){
     if(authUser != null){
         if(authUser.displayName != null){
             username = authUser.displayName
-            if(authUser.uuid == "4bbdf5ef8cc94f59a69eb96d0eafaa3e"){// Guigame
-                username = "👑" + authUser.displayName;
-            }
-            if(authUser.uuid == "dc47c29b048c4f069199f8f9ea9554df"){// Tchoupi le boss
-                username = "👑" + authUser.displayName;
-            }            
-            if(authUser.uuid == "f88fd6e1d33d440f87554630dd67db81"){// mayline42
-                username = "💩" + authUser.displayName;
-            }
-            if(authUser.uuid == "7242c6fc34b64ef9813cd4e7a973b92a"){// lepaladin
-                username = "💩" + authUser.displayName;
-            }
-            if(authUser.uuid == "6ac7b55eb6c547caa0b034904a74cb82"){// Flodurigolo
-                username = "🥔" + authUser.displayName;
-            }
+            if(authUser.displayName == "L3o___"){
+                username = "🤓" + authUser.displayName;
+                 }
+            if(authUser.displayName == "Jonyox"){
+                username = "🥸" + authUser.displayName;
+                 }
+            if(authUser.displayName == "KonanSori"){
+                username = "🪻" + authUser.displayName;
+                 }
         }
     }
     user_text.innerHTML = username

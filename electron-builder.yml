@@ -40,7 +40,7 @@ mac:
 linux: 
   target: 'AppImage'
   maintainer: 'Shisuys'
-  vendor: 'Haasta Studios Launcher'
+  vendor: 'Hasta Studios Launcher'
   synopsis: 'A minecraft launcher'
   description: 'Custom launcher made by shisuys, to support all Hasta Studios Projects.'
   category: 'Game'
