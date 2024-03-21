@@ -41,7 +41,6 @@ const server_selection_button = document.getElementById('server_selection_button
 const user_text               = document.getElementById('user_text')
 
 const loggerLanding = LoggerUtil.getLogger('Landing')
-const langLoader = require('./assets/js/langLoader')
 
 /* Launch Progress Wrapper Functions */
 
@@ -1010,11 +1009,6 @@ async function loadNews(){
             })
         })
     })
-const userSelectedLanguage = 'fr_FR'; // Altere para o idioma selecionado pelo usuário
-langLoader.setupLanguage(userSelectedLanguage);
 
-// Quando o usuário quiser mudar o idioma (por exemplo, em resposta a um clique de botão):
-const newLanguage = 'pt_BR'; // Substitua pelo novo idioma selecionado
-langLoader.changeLanguage(newLanguage);
-
+    return await promise
 }
