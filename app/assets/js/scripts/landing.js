@@ -3,10 +3,7 @@
  */
 // Requirements
 const { URL }                 = require('url')
-const {
-    MojangRestAPI,
-    getServerStatus
-}                             = require('helios-core/mojang')
+
 const {
     RestResponseStatus,
     isDisplayableError,
@@ -182,65 +179,6 @@ server_selection_button.onclick = async e => {
     await toggleServerSelection(true)
 }
 
-// Update Mojang Status Color
-const refreshMojangStatuses = async function(){
-    loggerLanding.info('Refreshing Mojang Statuses..')
-
-    let status = 'grey'
-    let tooltipEssentialHTML = ''
-    let tooltipNonEssentialHTML = ''
-
-    const response = await MojangRestAPI.status()
-    let statuses
-    if(response.responseStatus === RestResponseStatus.SUCCESS) {
-        statuses = response.data
-    } else {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
-        statuses = MojangRestAPI.getDefaultStatuses()
-    }
-    
-    greenCount = 0
-    greyCount = 0
-
-    for(let i=0; i<statuses.length; i++){
-        const service = statuses[i]
-
-        const tooltipHTML = `<div class="mojangStatusContainer">
-            <span class="mojangStatusIcon" style="color: ${MojangRestAPI.statusToHex(service.status)};">&#8226;</span>
-            <span class="mojangStatusName">${service.name}</span>
-        </div>`
-        if(service.essential){
-            tooltipEssentialHTML += tooltipHTML
-        } else {
-            tooltipNonEssentialHTML += tooltipHTML
-        }
-
-        if(service.status === 'yellow' && status !== 'red'){
-            status = 'yellow'
-        } else if(service.status === 'red'){
-            status = 'red'
-        } else {
-            if(service.status === 'grey'){
-                ++greyCount
-            }
-            ++greenCount
-        }
-
-    }
-
-    if(greenCount === statuses.length){
-        if(greyCount === statuses.length){
-            status = 'grey'
-        } else {
-            status = 'green'
-        }
-    }
-    
-    document.getElementById('mojangStatusEssentialContainer').innerHTML = tooltipEssentialHTML
-    document.getElementById('mojangStatusNonEssentialContainer').innerHTML = tooltipNonEssentialHTML
-    document.getElementById('mojang_status_icon').style.color = MojangRestAPI.statusToHex(status)
-}
-
 const refreshServerStatus = async (fade = false) => {
     loggerLanding.info('Refreshing Server Status')
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
@@ -272,11 +210,7 @@ const refreshServerStatus = async (fade = false) => {
     
 }
 
-refreshMojangStatuses()
 // Server Status is refreshed in uibinder.js on distributionIndexDone.
-
-// Refresh statuses every hour. The status page itself refreshes every day so...
-let mojangStatusListener = setInterval(() => refreshMojangStatuses(true), 60*60*1000)
 // Set refresh rate to once every 5 minutes.
 let serverStatusListener = setInterval(() => refreshServerStatus(true), 300000)
 
@@ -448,7 +382,7 @@ let hasRPC = false
 // Joined server regex
 // Change this if your server uses something different.
 const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
-const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+)$/
+const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+|Loading Minecraft .+ with Fabric Loader .+)$/
 const MIN_LINGER = 5000
 
 async function dlAsync(login = true) {
@@ -554,13 +488,13 @@ async function dlAsync(login = true) {
         serv.rawServer.id
     )
 
-    const forgeData = await distributionIndexProcessor.loadForgeVersionJson(serv)
+    const modLoaderData = await distributionIndexProcessor.loadModLoaderVersionJson(serv)
     const versionData = await mojangIndexProcessor.getVersionJson()
 
     if(login) {
         const authUser = ConfigManager.getSelectedAccount()
         loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
-        let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
+        let pb = new ProcessBuilder(serv, versionData, modLoaderData, authUser, remote.app.getVersion())
         setLaunchDetails(Lang.queryJS('landing.dlAsync.launchingGame'))
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
@@ -569,7 +503,7 @@ async function dlAsync(login = true) {
         const onLoadComplete = () => {
             toggleLaunchArea(false)
             if(hasRPC){
-                DiscordWrapper.updateDetails('Loading game..')
+                DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.loading'))
                 proc.stdout.on('data', gameStateChange)
             }
             proc.stdout.removeListener('data', tempListener)
@@ -596,9 +530,9 @@ async function dlAsync(login = true) {
         const gameStateChange = function(data){
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Exploring the Realm!')
+                DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joined'))
             } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Sailing to Westeros!')
+                DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joining'))
             }
         }
 
@@ -621,7 +555,7 @@ async function dlAsync(login = true) {
             setLaunchDetails(Lang.queryJS('landing.dlAsync.doneEnjoyServer'))
 
             // Init Discord Hook
-            if(distro.rawDistribution.discord != null && serv.rawServerdiscord != null){
+            if(distro.rawDistribution.discord != null && serv.rawServer.discord != null){
                 DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
                 hasRPC = true
                 proc.on('close', (code, signal) => {

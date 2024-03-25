@@ -1842,6 +1842,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Button to open the mods folder for drop-in mods. */
 #settingsDropinFileSystemButton {
+    display: none;
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid rgba(126, 126, 126, 0.57);
     border-radius: 3px;

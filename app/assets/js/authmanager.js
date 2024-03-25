@@ -188,40 +188,6 @@ exports.removeMicrosoftAccount = async function(uuid){
     }
 }
 
-/**
- * Validate the selected account with Mojang's authserver. If the account is not valid,
- * we will attempt to refresh the access token and update that value. If that fails, a
- * new login will be required.
- * 
- * @returns {Promise.<boolean>} Promise which resolves to true if the access token is valid,
- * otherwise false.
- */
-async function validateSelectedMojangAccount(){
-    const current = ConfigManager.getSelectedAccount()
-    const response = await MojangRestAPI.validate(current.accessToken, ConfigManager.getClientToken())
-
-    if(response.responseStatus === RestResponseStatus.SUCCESS) {
-        const isValid = response.data
-        if(!isValid){
-            const refreshResponse = await MojangRestAPI.refresh(current.accessToken, ConfigManager.getClientToken())
-            if(refreshResponse.responseStatus === RestResponseStatus.SUCCESS) {
-                const session = refreshResponse.data
-                ConfigManager.updateMojangAuthAccount(current.uuid, session.accessToken)
-                ConfigManager.save()
-            } else {
-                log.error('Error while validating selected profile:', refreshResponse.error)
-                log.info('Account access token is invalid.')
-                return false
-            }
-            log.info('Account access token validated.')
-            return true
-        } else {
-            log.info('Account access token validated.')
-            return true
-        }
-    }
-    
-}
 
 /**
  * Validate the selected account with Microsoft's authserver. If the account is not valid,
@@ -297,8 +263,6 @@ exports.validateSelected = async function(){
 
     if(current.type === 'microsoft') {
         return await validateSelectedMicrosoftAccount()
-    } else {
-        return await validateSelectedMojangAccount()
     }
     
 }
