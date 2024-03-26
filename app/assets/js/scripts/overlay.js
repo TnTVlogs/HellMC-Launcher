@@ -122,6 +122,12 @@ async function toggleServerSelection(toggleState){
     toggleOverlay(toggleState, true, 'serverSelectContent')
 }
 
+    ipcRenderer.send(
+        "RPC:updateActivity", {
+            details: "Selecting a Modpack",
+            startTimestamp: new Date().getTime(),
+        }
+    );
 /**
  * Set the content of the overlay.
  * 

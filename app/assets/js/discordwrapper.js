@@ -5,20 +5,22 @@ const logger = LoggerUtil.getLogger('DiscordWrapper')
 
 const { Client } = require('discord-rpc-patch')
 
+const Lang = require('./langloader')
+
 let client
 let activity
 
-exports.initRPC = function(genSettings, servSettings, initialDetails = 'Waiting for Client..'){
+exports.initRPC = function(){
     client = new Client({ transport: 'ipc' })
 
     activity = {
-        details: initialDetails,
-        state: 'Server: ' + servSettings.shortId,
-        largeImageKey: servSettings.largeImageKey,
-        largeImageText: servSettings.largeImageText,
-        smallImageKey: genSettings.smallImageKey,
-        smallImageText: genSettings.smallImageText,
-        startTimestamp: new Date().getTime(),
+        details: Lang.queryJS('discord.starting'),
+        largeImageKey: "hastaicone",
+        largeImageText: "MADE BY SHISUYS",
+        buttons: [
+            { label: "Our Discord", url: "https://discord.gg/zsmp" },
+            { label: "ZSMP WEBSITE", url: "https://zelthoriaismp.cloud" }
+        ],
         instance: false
     }
 
@@ -27,7 +29,7 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Waiting 
         client.setActivity(activity)
     })
     
-    client.login({clientId: genSettings.clientId}).catch(error => {
+    client.login({clientId: "1115084046716903484"}).catch(error => {
         if(error.message.includes('ENOENT')) {
             logger.info('Unable to initialize Discord Rich Presence, no client detected.')
         } else {
@@ -36,8 +38,19 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Waiting 
     })
 }
 
+exports.updateActivity = function(newActivity){
+    const updatedActivity = { ...activity, ...newActivity };
+    activity = updatedActivity
+    client.setActivity(activity)
+}
+
 exports.updateDetails = function(details){
     activity.details = details
+    client.setActivity(activity)
+}
+
+exports.updateState = function(state){
+    activity.state = state
     client.setActivity(activity)
 }
 

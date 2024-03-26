@@ -46,6 +46,53 @@ function switchView(current, next, currentFadeTime = 500, nextFadeTime = 500, on
             await onNextFade()
         })
     })
+    
+    switch (next) {
+        case VIEWS.landing:
+            ipcRenderer.send(
+                "RPC:updateActivity", {
+                    details: "In the Launcher",
+                    startTimestamp: new Date().getTime(),
+                }
+            );
+          break;
+
+        case VIEWS.settings:
+            ipcRenderer.send(
+                "RPC:updateActivity", {
+                    details: "Changing settings",
+                    startTimestamp: new Date().getTime(),
+                }
+            );
+          break;
+
+        case VIEWS.login:
+            ipcRenderer.send(
+                "RPC:updateActivity", {
+                    details: "Trying to Login",
+                    startTimestamp: new Date().getTime(),
+                }
+            );
+          break;
+
+        case VIEWS.waiting:
+            ipcRenderer.send(
+                "RPC:updateActivity", {
+                    details: "Adding Account",
+                    startTimestamp: new Date().getTime(),
+                }
+            );
+          break;
+
+        default:
+            ipcRenderer.send(
+                "RPC:updateActivity", {
+                    details: "In the Launcher",
+                    startTimestamp: new Date().getTime(),
+                }
+            );
+          break;
+      }
 }
 
 /**
