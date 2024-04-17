@@ -5,6 +5,11 @@
 const { URL }                 = require('url')
 
 const {
+    MojangRestAPI,
+    getServerStatus
+}                             = require('helios-core/mojang')
+
+const {
     RestResponseStatus,
     isDisplayableError,
     validateLocalFile
