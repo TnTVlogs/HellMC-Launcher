@@ -2,9 +2,7 @@
 const os     = require('os')
 const semver = require('semver')
 
-const DropinModUtil  = require('./assets/js/dropinmodutil')
 const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants')
-
 const settingsState = {
     invalid: new Set()
 }
@@ -326,7 +324,6 @@ function fullSettingsSave() {
     saveModConfiguration()
     ConfigManager.save()
     saveDropinModConfiguration()
-    saveShaderpackSettings()
 }
 
 /* Closes the settings view and saves all data. */
@@ -621,58 +618,95 @@ function refreshAuthAccountSelected(uuid){
 const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')
 const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
 
-/**
- * Add auth account elements for each one stored in the authentication database.
- */
-function populateAuthAccounts(){
-    const authAccounts = ConfigManager.getAuthAccounts()
-    const authKeys = Object.keys(authAccounts)
-    if(authKeys.length === 0){
-        return
+async function fetchSkinAndConvertToBase64(username) {
+  try {
+
+    const skinURL = `https://zsmpskinserver.000webhostapp.com/skins/${username}.png`;
+
+
+    const response = await fetch(skinURL);
+
+    if (!response.ok) {
+      throw new Error('Erro ao buscar a imagem da skin: ' + response.status);
     }
-    const selectedUUID = ConfigManager.getSelectedAccount().uuid
 
-    let microsoftAuthAccountStr = ''
-    let mojangAuthAccountStr = ''
+    const blob = await response.blob();
 
-    authKeys.forEach((val) => {
-        const acc = authAccounts[val]
-
-        const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
-            <div class="settingsAuthAccountLeft">
-            <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://minotar.net/body/${acc.displayName}">
-            </div>
-            <div class="settingsAuthAccountRight">
-                <div class="settingsAuthAccountDetails">
-                    <div class="settingsAuthAccountDetailPane">
-                        <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.username')}</div>
-                        <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
-                    </div>
-                    <div class="settingsAuthAccountDetailPane">
-                        <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.uuid')}</div>
-                        <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
-                    </div>
-                </div>
-                <div class="settingsAuthAccountActions">
-                    <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.authAccountPopulate.selectedAccount') : '>' + Lang.queryJS('settings.authAccountPopulate.selectAccount')}</button>
-                    <div class="settingsAuthAccountWrapper">
-                        <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.authAccountPopulate.logout')}</button>
-                    </div>
-                </div>
-            </div>
-        </div>`
-
-        if(acc.type === 'microsoft') {
-            microsoftAuthAccountStr += accHtml
-        } else {
-            mojangAuthAccountStr += accHtml
-        }
-
-    })
-
-    settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr
-    settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result.split(',')[1]);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Erro ao buscar e converter a imagem:', error);
+    return 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAABF1BMVEUAAAAIBwgODQ8PDw8QEBEREBETExMUExYXExQXExcXFxcZGBoaGhobGRobGRsbGxscGx4eHB4eHh4fHR8gHSEhHSEhHiEkIyQlICAlICElIyUlJCUlJSUoIiIoJiguJiYyKyszMjJAPz9CPj5MSEhNTExWWWlXXXBoWVdrdZFuXFp0Ght1Ghx4ZWR8Gx18HB5+HByAbGmBHB6BHR+EHyGFcG+HISGJHiGJHyGNICKRISORIiSSISOTISGbIiKdw9GeJCaiJCemJSirJinUxMjaztHbzNDbztLd8fzj2dvm2Nvm29vn4OHswb/s5eftw73t5OTv7Ozw0Mnw5ebw7Ozy6+n28vD32c338vH45dz48/P88uX+8ecrsNYzAAAAAXRSTlMAQObYZgAABEVJREFUWMPVlgt32jYUx71HyIbTErvU7jLThDzcNrQMHIiyuqJelji1geDWlNKF7/85du+VZEyB1E12drY/spF9rJ/vQ5aupknF8RW1JAmpaV8qisSxTnHycTL5mKwFRNeRPK0DSIUhAsJwGYDn2wAJab0LX9PchRHoLgDlwmgGGoV3sEC68OHzbPb5w10sQBfAAgFYYUEUrcxiZvoFAi7COJOYFzBQPnkJUix5isj0GA2PQxHEUF3H46skuRrHWeqjywhaNimyeRFP6vv1eAKAIQgAk7h+UJ8AIE7+govouq7VIf/R4BLaAAbCZR0Bcl7Ek/1kHwFDEgIOkgMATOJkAicNnte091H0/hIa/mviVhYDABwhwHWHQ9dFwCEBxggYSwBaoEEbiDcvAJIjfJPrvng2HD574bpwkRwmBBjHGAN8aqDmdhgOhOlzF+IjnLqu++7tzc3bd66bXCTJIWUBghhjEOHRaA6IcBgF8fqaghj3+/2wH0L+b24g/2H/ot/Pp1GlP8xO4k4UzSeG/dRyarXaE+XW91KWTrLU/RPPg1m+YjJZoFUAo0Ey7gBIR6OUAJZhFQAsu5B++gQAixEgc8E7WQGwLctGAMl6aqPprVY6HKadDvZ9/03ggzyhJuh37yQHOEY5Bg63bcM+LjFWOj1Np9OUd36APowNkMBJBAh4HtAmvXpOetVulxqN0in/DgQA6MPwAAm81+O810Qr/B7PAbqktgC0u10B2EjTDf4bAnD4ORCEBQLA8wCTVCmTKqYJAB0A0+kG7+gIOEcFAfM8xhoC4LMcYKu8BSqXhLa2EACvmj7gecB5wFAezQvfywPMClkgxkNfZ6za4s1fjCbvVBnTFwCMANBfApgl9KBkKoDX+KnBXxIgEC5whjEQgBUxMEUMEOB5Oy3OmMH4yx3PUwCfM8oCajELFSEZxEoFAFXO2esHrxmvAsAP8P2Bv6nrm5s0DZpNbzMH2EXt7dVI0NXRSM4aRqOKPf1PmgfBH/r2tq5v/0ja1nMAMbL2hAQdyzAs9Q1g/5HUjDQizWZffg/wWyNd1/4XsjXrPoM1OwPcEozb5chVy3DkjSm1+2jj5/uNf5hqD7/lebMi57X5n0ouv8/glqadLQJgDZgvA19h72hnZxoeO4VfuLubv6pKAK8uWADqiX6PF3FBq/5j0SzwSTuL3wBsdDYuLtmm6nnLi8htwu3+XwYsufCr/c0AsS44mvH4sYExoLrBcQwvpxN/LcDJ/tF8KDeORd3gWDSSS/kF/Fd1gqobqCzBTQmON4UB7W5X1Q15C87XAtQ6AOuCqhNU3UCABqPywC9iAW3zomaguoH2Y09s7l5hgKgZqG4gAJMqAlB1ggCYAoABYPks0OrA1wLKZqYy7eeYBQD0/ALrgaoTVN0gCwJZHmhqQcgvD4uizX5vb1eqJgsCWR4UiIGqE1TdIAsCWR4sP/83dhxZMfAEayUAAAAASUVORK5CYII=';
+  }
 }
+    
+async function populateAuthAccounts() {
+    const authAccounts = ConfigManager.getAuthAccounts();
+    const authKeys = Object.keys(authAccounts);
+    if (authKeys.length === 0) {
+        return;
+    }
+    const selectedUUID = ConfigManager.getSelectedAccount().uuid;
+
+    let microsoftAuthAccountStr = '';
+    let mojangAuthAccountStr = '';
+
+    for (const val of authKeys) {
+        const acc = authAccounts[val];
+
+        try {
+            const base64modifier = await fetchSkinAndConvertToBase64(acc.displayName);
+
+            if (base64modifier !== null) {
+                const finalURL = `https://visage.surgeplay.com/bust/256/${encodeURIComponent(base64modifier)}`;
+
+                const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
+                    <div class="settingsAuthAccountLeft">
+                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="${finalURL}">
+                    </div>
+                    <div class="settingsAuthAccountRight">
+                        <div class="settingsAuthAccountDetails">
+                            <div class="settingsAuthAccountDetailPane">
+                                <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.username')}</div>
+                                <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                            </div>
+                            <div class="settingsAuthAccountDetailPane">
+                                <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.uuid')}</div>
+                                <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
+                            </div>
+                        </div>
+                        <div class="settingsAuthAccountActions">
+                            <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.authAccountPopulate.selectedAccount') : '>' + Lang.queryJS('settings.authAccountPopulate.selectAccount')}</button>
+                            <div class="settingsAuthAccountWrapper">
+                                <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.authAccountPopulate.logout')}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+                if (acc.type === 'microsoft') {
+                    microsoftAuthAccountStr += accHtml;
+                } else {
+                    mojangAuthAccountStr += accHtml;
+                }
+            } else {
+                console.error('Erro ao converter a skin em base64:', base64modifier);
+            }
+        } catch (error) {
+            console.error('Erro ao processar a conta de autenticação:', error);
+        }
+    }
+
+    settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr;
+    settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr;
+}
+
 
 /**
  * Prepare the accounts tab for display.
@@ -830,7 +864,6 @@ function saveModConfiguration(){
 function _saveModConfiguration(modConf){
     for(let m of Object.entries(modConf)){
         const tSwitch = settingsModsContainer.querySelectorAll(`[formod='${m[0]}']`)
-        if(!tSwitch[0].hasAttribute('dropin')){
             if(typeof m[1] === 'boolean'){
                 modConf[m[0]] = tSwitch[0].checked
             } else {
@@ -843,227 +876,6 @@ function _saveModConfiguration(modConf){
             }
         }
     }
-    return modConf
-}
-
-// Drop-in mod elements.
-
-let CACHE_SETTINGS_MODS_DIR
-let CACHE_DROPIN_MODS
-
-/**
- * Resolve any located drop-in mods for this server and
- * populate the results onto the UI.
- */
-async function resolveDropinModsForUI(){
-    const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
-    CACHE_SETTINGS_MODS_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id, 'mods')
-    CACHE_DROPIN_MODS = DropinModUtil.scanForDropinMods(CACHE_SETTINGS_MODS_DIR, serv.rawServer.minecraftVersion)
-
-    let dropinMods = ''
-
-    for(dropin of CACHE_DROPIN_MODS){
-        dropinMods += `<div id="${dropin.fullName}" class="settingsBaseMod settingsDropinMod" ${!dropin.disabled ? 'enabled' : ''}>
-                    <div class="settingsModContent">
-                        <div class="settingsModMainWrapper">
-                            <div class="settingsModStatus"></div>
-                            <div class="settingsModDetails">
-                                <span class="settingsModName">${dropin.name}</span>
-                                <div class="settingsDropinRemoveWrapper">
-                                    <button class="settingsDropinRemoveButton" remmod="${dropin.fullName}">${Lang.queryJS('settings.dropinMods.removeButton')}</button>
-                                </div>
-                            </div>
-                        </div>
-                        <label class="toggleSwitch">
-                            <input type="checkbox" formod="${dropin.fullName}" dropin ${!dropin.disabled ? 'checked' : ''}>
-                            <span class="toggleSwitchSlider"></span>
-                        </label>
-                    </div>
-                </div>`
-    }
-
-    document.getElementById('settingsDropinModsContent').innerHTML = dropinMods
-}
-
-/**
- * Bind the remove button for each loaded drop-in mod.
- */
-function bindDropinModsRemoveButton(){
-    const sEls = settingsModsContainer.querySelectorAll('[remmod]')
-    Array.from(sEls).map((v, index, arr) => {
-        v.onclick = async () => {
-            const fullName = v.getAttribute('remmod')
-            const res = await DropinModUtil.deleteDropinMod(CACHE_SETTINGS_MODS_DIR, fullName)
-            if(res){
-                document.getElementById(fullName).remove()
-            } else {
-                setOverlayContent(
-                    Lang.queryJS('settings.dropinMods.deleteFailedTitle', { fullName }),
-                    Lang.queryJS('settings.dropinMods.deleteFailedMessage'),
-                    Lang.queryJS('settings.okButton')
-                )
-                setOverlayHandler(null)
-                toggleOverlay(true)
-            }
-        }
-    })
-}
-
-/**
- * Bind functionality to the file system button for the selected
- * server configuration.
- */
-function bindDropinModFileSystemButton(){
-    const fsBtn = document.getElementById('settingsDropinFileSystemButton')
-    fsBtn.onclick = () => {
-        DropinModUtil.validateDir(CACHE_SETTINGS_MODS_DIR)
-        shell.openPath(CACHE_SETTINGS_MODS_DIR)
-    }
-    fsBtn.ondragenter = e => {
-        e.dataTransfer.dropEffect = 'move'
-        fsBtn.setAttribute('drag', '')
-        e.preventDefault()
-    }
-    fsBtn.ondragover = e => {
-        e.preventDefault()
-    }
-    fsBtn.ondragleave = e => {
-        fsBtn.removeAttribute('drag')
-    }
-
-    fsBtn.ondrop = async e => {
-        fsBtn.removeAttribute('drag')
-        e.preventDefault()
-
-        DropinModUtil.addDropinMods(e.dataTransfer.files, CACHE_SETTINGS_MODS_DIR)
-        await reloadDropinMods()
-    }
-}
-
-/**
- * Save drop-in mod states. Enabling and disabling is just a matter
- * of adding/removing the .disabled extension.
- */
-function saveDropinModConfiguration(){
-    for(dropin of CACHE_DROPIN_MODS){
-        const dropinUI = document.getElementById(dropin.fullName)
-        if(dropinUI != null){
-            const dropinUIEnabled = dropinUI.hasAttribute('enabled')
-            if(DropinModUtil.isDropinModEnabled(dropin.fullName) != dropinUIEnabled){
-                DropinModUtil.toggleDropinMod(CACHE_SETTINGS_MODS_DIR, dropin.fullName, dropinUIEnabled).catch(err => {
-                    if(!isOverlayVisible()){
-                        setOverlayContent(
-                            Lang.queryJS('settings.dropinMods.failedToggleTitle'),
-                            err.message,
-                            Lang.queryJS('settings.dropinMods.okButton')
-                        )
-                        setOverlayHandler(null)
-                        toggleOverlay(true)
-                    }
-                })
-            }
-        }
-    }
-}
-
-// Refresh the drop-in mods when F5 is pressed.
-// Only active on the mods tab.
-document.addEventListener('keydown', async (e) => {
-    if(getCurrentView() === VIEWS.settings && selectedSettingsTab === 'settingsTabMods'){
-        if(e.key === 'F5'){
-            await reloadDropinMods()
-            saveShaderpackSettings()
-            await resolveShaderpacksForUI()
-        }
-    }
-})
-
-async function reloadDropinMods(){
-    await resolveDropinModsForUI()
-    bindDropinModsRemoveButton()
-    bindDropinModFileSystemButton()
-    bindModsToggleSwitch()
-}
-
-// Shaderpack
-
-let CACHE_SETTINGS_INSTANCE_DIR
-let CACHE_SHADERPACKS
-let CACHE_SELECTED_SHADERPACK
-
-/**
- * Load shaderpack information.
- */
-async function resolveShaderpacksForUI(){
-    const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
-    CACHE_SETTINGS_INSTANCE_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.rawServer.id)
-    CACHE_SHADERPACKS = DropinModUtil.scanForShaderpacks(CACHE_SETTINGS_INSTANCE_DIR)
-    CACHE_SELECTED_SHADERPACK = DropinModUtil.getEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR)
-
-    setShadersOptions(CACHE_SHADERPACKS, CACHE_SELECTED_SHADERPACK)
-}
-
-function setShadersOptions(arr, selected){
-    const cont = document.getElementById('settingsShadersOptions')
-    cont.innerHTML = ''
-    for(let opt of arr) {
-        const d = document.createElement('DIV')
-        d.innerHTML = opt.name
-        d.setAttribute('value', opt.fullName)
-        if(opt.fullName === selected) {
-            d.setAttribute('selected', '')
-            document.getElementById('settingsShadersSelected').innerHTML = opt.name
-        }
-        d.addEventListener('click', function(e) {
-            this.parentNode.previousElementSibling.innerHTML = this.innerHTML
-            for(let sib of this.parentNode.children){
-                sib.removeAttribute('selected')
-            }
-            this.setAttribute('selected', '')
-            closeSettingsSelect()
-        })
-        cont.appendChild(d)
-    }
-}
-
-function saveShaderpackSettings(){
-    let sel = 'OFF'
-    for(let opt of document.getElementById('settingsShadersOptions').childNodes){
-        if(opt.hasAttribute('selected')){
-            sel = opt.getAttribute('value')
-        }
-    }
-    DropinModUtil.setEnabledShaderpack(CACHE_SETTINGS_INSTANCE_DIR, sel)
-}
-
-function bindShaderpackButton() {
-    const spBtn = document.getElementById('settingsShaderpackButton')
-    spBtn.onclick = () => {
-        const p = path.join(CACHE_SETTINGS_INSTANCE_DIR, 'shaderpacks')
-        DropinModUtil.validateDir(p)
-        shell.openPath(p)
-    }
-    spBtn.ondragenter = e => {
-        e.dataTransfer.dropEffect = 'move'
-        spBtn.setAttribute('drag', '')
-        e.preventDefault()
-    }
-    spBtn.ondragover = e => {
-        e.preventDefault()
-    }
-    spBtn.ondragleave = e => {
-        spBtn.removeAttribute('drag')
-    }
-
-    spBtn.ondrop = async e => {
-        spBtn.removeAttribute('drag')
-        e.preventDefault()
-
-        DropinModUtil.addShaderpacks(e.dataTransfer.files, CACHE_SETTINGS_INSTANCE_DIR)
-        saveShaderpackSettings()
-        await resolveShaderpacksForUI()
-    }
-}
 
 // Server status bar functions.
 
@@ -1112,7 +924,6 @@ Array.from(document.getElementsByClassName('settingsSwitchServerButton')).forEac
 function saveAllModConfigurations(){
     saveModConfiguration()
     ConfigManager.save()
-    saveDropinModConfiguration()
 }
 
 /**
@@ -1131,11 +942,6 @@ function animateSettingsTabRefresh(){
  */
 async function prepareModsTab(first){
     await resolveModsForUI()
-    await resolveDropinModsForUI()
-    await resolveShaderpacksForUI()
-    bindDropinModsRemoveButton()
-    bindDropinModFileSystemButton()
-    bindShaderpackButton()
     bindModsToggleSwitch()
     await loadSelectedServerOnModsTab()
 }
