@@ -35,7 +35,7 @@ exports.addAccount = async function(username) {
     try {
         let userId = null;
 
-        // Gerar um UUID baseado no hash MD5 do nome de usu�rio
+        // Gerar um UUID baseado no hash MD5 do nome de usu�rio
         const hash = crypto.createHash('md5');
         hash.update(username);
         userId = hash.digest('hex');
@@ -252,17 +252,13 @@ async function validateSelectedMicrosoftAccount(){
     }
 }
 
-/**
- * Validate the selected auth account.
- * 
- * @returns {Promise.<boolean>} Promise which resolves to true if the access token is valid,
- * otherwise false.
- */
 exports.validateSelected = async function(){
     const current = ConfigManager.getSelectedAccount()
 
     if(current.type === 'microsoft') {
         return await validateSelectedMicrosoftAccount()
+    } else {
+        // Se o tipo da conta não for "microsoft", considere-a como válida
+        return true;
     }
-    
 }
