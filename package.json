@@ -1,13 +1,13 @@
 {
-  "name": "HastaStudiosLauncherbeta",
-  "version": "1.0.7",
-  "productName": "Hasta studios Launcher",
-  "description": "Hasta studios launcher",
+  "name": "DreamCloudStudiosLauncher",
+  "version": "1.0.1",
+  "productName": "DreamCloud Studios Launcher",
+  "description": "DreamCloud Studios Launcher",
   "author": "Shisuys",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/Shisuiicaro/Hasta-studios-Launcher",
+  "homepage": "https://github.com/DreamCloud-Development/Launcher",
   "bugs": {
-    "url": "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
+    "url": "https://github.com/DreamCloud-Development/Launcher/issues"
   },
   "private": true,
   "main": "index.js",
@@ -20,7 +20,7 @@
     "lint": "eslint --config .eslintrc.json ."
   },
   "engines": {
-    "node": "18.x.x"
+    "node": ">=18.x.x"
   },
     "dependencies": {
         "@electron/remote": "^2.1.0",
@@ -47,6 +47,6 @@
     },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shisuiicaro/Hasta-studios-Launcher.git"
+    "url": "git+https://github.com/DreamCloud-Development/Launcher.git"
   }
 }

@@ -1,5 +1,5 @@
 [ejs.app]
-title = "Hasta Studios Launcher"
+title = "DreamClouds Studios Launcher"
 
 [ejs.landing]
 mediaGitHubURL = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
@@ -14,11 +14,11 @@ sourceGithubLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
 supportLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
 
 [ejs.welcome]
-welcomeHeader = "BEM-VINDO AO ZSMP"
+welcomeHeader = "Bienvenu sur le launcher des DreamClouds"
 welcomeDescription = """
-Bem-vindo ao ZSMP, onde sua aventura no Minecraft começa! Mergulhe em um mundo de possibilidades infinitas e experiências inesquecíveis no melhor servidor SMP que você pode imaginar. Junte-se à nossa vibrante comunidade de jogadores e embarque em missões épicas, construa criações incríveis e forje amizades duradouras.
+À partir de maintenant, ne te soucie plus d'installer Java, un modpack, puis de le mettre à jour car il ne marchait pas puis parce que Tegnew a changé d'avis
 
-Mas espera, tem mais! Para participar da diversão, basta entrar no nosso servidor do Discord para se auto-inscrever e ter acesso ao nosso reino exclusivo de emoções. Seja você um explorador experiente ou um construtor novato, o ZSMP dá as boas-vindas a jogadores de todos os níveis de habilidade.
+Pour au final arriver trop tard car il a deja tuer 36 dragons et finit tout son bouquin de magie
 
-Então, o que você está esperando? Clique em "Continuar" e deixe as aventuras começarem!
+Découvre le luxe à ma Française, et à la sauce Funa
 """
