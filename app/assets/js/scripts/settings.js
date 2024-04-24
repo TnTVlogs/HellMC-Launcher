@@ -323,7 +323,6 @@ function fullSettingsSave() {
     saveSettingsValues()
     saveModConfiguration()
     ConfigManager.save()
-    saveDropinModConfiguration()
 }
 
 /* Closes the settings view and saves all data. */
@@ -618,38 +617,42 @@ function refreshAuthAccountSelected(uuid){
 const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')
 const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
 
+// Defina uma variável externa para armazenar o resultado base64
+let base64Image = '';
+
+// Função para buscar a imagem e converter para base64
 async function fetchSkinAndConvertToBase64(username) {
-  try {
+    try {
+        const timestamp = new Date().getTime(); // Adiciona um timestamp único
+        const skinURL = `https://zsmpskinserver.000webhostapp.com/skins/${username}.png?timestamp=${timestamp}`;
 
-    const skinURL = `https://zsmpskinserver.000webhostapp.com/skins/${username}.png`;
+        const response = await fetch(skinURL);
 
+        if (!response.ok) {
+            throw new Error('Erro ao buscar a imagem da skin: ' + response.status);
+        }
 
-    const response = await fetch(skinURL);
+        const blob = await response.blob();
 
-    if (!response.ok) {
-      throw new Error('Erro ao buscar a imagem da skin: ' + response.status);
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(reader.result.split(',')[1]);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error('Erro ao buscar e converter a imagem:', error);
+        return 'NiceTryFeds';
     }
-
-    const blob = await response.blob();
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result.split(',')[1]);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('Erro ao buscar e converter a imagem:', error);
-    return 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAABF1BMVEUAAAAIBwgODQ8PDw8QEBEREBETExMUExYXExQXExcXFxcZGBoaGhobGRobGRsbGxscGx4eHB4eHh4fHR8gHSEhHSEhHiEkIyQlICAlICElIyUlJCUlJSUoIiIoJiguJiYyKyszMjJAPz9CPj5MSEhNTExWWWlXXXBoWVdrdZFuXFp0Ght1Ghx4ZWR8Gx18HB5+HByAbGmBHB6BHR+EHyGFcG+HISGJHiGJHyGNICKRISORIiSSISOTISGbIiKdw9GeJCaiJCemJSirJinUxMjaztHbzNDbztLd8fzj2dvm2Nvm29vn4OHswb/s5eftw73t5OTv7Ozw0Mnw5ebw7Ozy6+n28vD32c338vH45dz48/P88uX+8ecrsNYzAAAAAXRSTlMAQObYZgAABEVJREFUWMPVlgt32jYUx71HyIbTErvU7jLThDzcNrQMHIiyuqJelji1geDWlNKF7/85du+VZEyB1E12drY/spF9rJ/vQ5aupknF8RW1JAmpaV8qisSxTnHycTL5mKwFRNeRPK0DSIUhAsJwGYDn2wAJab0LX9PchRHoLgDlwmgGGoV3sEC68OHzbPb5w10sQBfAAgFYYUEUrcxiZvoFAi7COJOYFzBQPnkJUix5isj0GA2PQxHEUF3H46skuRrHWeqjywhaNimyeRFP6vv1eAKAIQgAk7h+UJ8AIE7+govouq7VIf/R4BLaAAbCZR0Bcl7Ek/1kHwFDEgIOkgMATOJkAicNnte091H0/hIa/mviVhYDABwhwHWHQ9dFwCEBxggYSwBaoEEbiDcvAJIjfJPrvng2HD574bpwkRwmBBjHGAN8aqDmdhgOhOlzF+IjnLqu++7tzc3bd66bXCTJIWUBghhjEOHRaA6IcBgF8fqaghj3+/2wH0L+b24g/2H/ot/Pp1GlP8xO4k4UzSeG/dRyarXaE+XW91KWTrLU/RPPg1m+YjJZoFUAo0Ey7gBIR6OUAJZhFQAsu5B++gQAixEgc8E7WQGwLctGAMl6aqPprVY6HKadDvZ9/03ggzyhJuh37yQHOEY5Bg63bcM+LjFWOj1Np9OUd36APowNkMBJBAh4HtAmvXpOetVulxqN0in/DgQA6MPwAAm81+O810Qr/B7PAbqktgC0u10B2EjTDf4bAnD4ORCEBQLA8wCTVCmTKqYJAB0A0+kG7+gIOEcFAfM8xhoC4LMcYKu8BSqXhLa2EACvmj7gecB5wFAezQvfywPMClkgxkNfZ6za4s1fjCbvVBnTFwCMANBfApgl9KBkKoDX+KnBXxIgEC5whjEQgBUxMEUMEOB5Oy3OmMH4yx3PUwCfM8oCajELFSEZxEoFAFXO2esHrxmvAsAP8P2Bv6nrm5s0DZpNbzMH2EXt7dVI0NXRSM4aRqOKPf1PmgfBH/r2tq5v/0ja1nMAMbL2hAQdyzAs9Q1g/5HUjDQizWZffg/wWyNd1/4XsjXrPoM1OwPcEozb5chVy3DkjSm1+2jj5/uNf5hqD7/lebMi57X5n0ouv8/glqadLQJgDZgvA19h72hnZxoeO4VfuLubv6pKAK8uWADqiX6PF3FBq/5j0SzwSTuL3wBsdDYuLtmm6nnLi8htwu3+XwYsufCr/c0AsS44mvH4sYExoLrBcQwvpxN/LcDJ/tF8KDeORd3gWDSSS/kF/Fd1gqobqCzBTQmON4UB7W5X1Q15C87XAtQ6AOuCqhNU3UCABqPywC9iAW3zomaguoH2Y09s7l5hgKgZqG4gAJMqAlB1ggCYAoABYPks0OrA1wLKZqYy7eeYBQD0/ALrgaoTVN0gCwJZHmhqQcgvD4uizX5vb1eqJgsCWR4UiIGqE1TdIAsCWR4sP/83dhxZMfAEayUAAAAASUVORK5CYII=';
-  }
 }
-    
-async function populateAuthAccounts() {
+
+// Função para popular as contas de autenticação
+async function populateAuthAccounts(){
     const authAccounts = ConfigManager.getAuthAccounts();
     const authKeys = Object.keys(authAccounts);
-    if (authKeys.length === 0) {
+    if(authKeys.length === 0){
         return;
     }
     const selectedUUID = ConfigManager.getSelectedAccount().uuid;
@@ -657,64 +660,72 @@ async function populateAuthAccounts() {
     let microsoftAuthAccountStr = '';
     let mojangAuthAccountStr = '';
 
-    for (const val of authKeys) {
+    // Array para armazenar todas as promessas
+    const promises = [];
+
+    authKeys.forEach((val) => {
         const acc = authAccounts[val];
 
-        try {
-            const base64modifier = await fetchSkinAndConvertToBase64(acc.displayName);
+        // Adicione a promessa à matriz de promessas
+        promises.push(
+            fetchSkinAndConvertToBase64(acc.displayName)
+                .then(result => {
+                    // Use base64Image aqui para construir a URL da imagem
+                    const encodedBase64 = encodeURIComponent(result);
+                    const skinURL = `https://visage.surgeplay.com/bust/256/${encodedBase64}`;
 
-            if (base64modifier !== null) {
-                const finalURL = `https://visage.surgeplay.com/bust/256/${encodeURIComponent(base64modifier)}`;
-
-                const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
-                    <div class="settingsAuthAccountLeft">
-                    <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="${finalURL}">
-                    </div>
-                    <div class="settingsAuthAccountRight">
-                        <div class="settingsAuthAccountDetails">
-                            <div class="settingsAuthAccountDetailPane">
-                                <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.username')}</div>
-                                <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                    const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
+                        <div class="settingsAuthAccountLeft">
+                        <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="${skinURL}">
+                        </div>
+                        <div class="settingsAuthAccountRight">
+                            <div class="settingsAuthAccountDetails">
+                                <div class="settingsAuthAccountDetailPane">
+                                    <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.username')}</div>
+                                    <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                                </div>
+                                <div class="settingsAuthAccountDetailPane">
+                                    <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.uuid')}</div>
+                                    <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
+                                </div>
                             </div>
-                            <div class="settingsAuthAccountDetailPane">
-                                <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.uuid')}</div>
-                                <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
+                            <div class="settingsAuthAccountActions">
+                                <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.authAccountPopulate.selectedAccount') : '>' + Lang.queryJS('settings.authAccountPopulate.selectAccount')}</button>
+                                <div class="settingsAuthAccountWrapper">
+                                    <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.authAccountPopulate.logout')}</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="settingsAuthAccountActions">
-                            <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.authAccountPopulate.selectedAccount') : '>' + Lang.queryJS('settings.authAccountPopulate.selectAccount')}</button>
-                            <div class="settingsAuthAccountWrapper">
-                                <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.authAccountPopulate.logout')}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
+                    </div>`;
 
-                if (acc.type === 'microsoft') {
-                    microsoftAuthAccountStr += accHtml;
-                } else {
-                    mojangAuthAccountStr += accHtml;
-                }
-            } else {
-                console.error('Erro ao converter a skin em base64:', base64modifier);
-            }
-        } catch (error) {
-            console.error('Erro ao processar a conta de autenticação:', error);
-        }
-    }
+                    if (acc.type === 'microsoft') {
+                        microsoftAuthAccountStr += accHtml;
+                    } else {
+                        mojangAuthAccountStr += accHtml;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar e converter a imagem:', error);
+                })
+        );
+    });
 
-    settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr;
-    settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr;
+    // Aguarde a conclusão de todas as promessas antes de retornar
+    await Promise.all(promises);
+
+    // Atualize as contas de autenticação depois de receber todas as imagens
+    return { microsoftAuthAccountStr, mojangAuthAccountStr };
 }
-
 
 /**
  * Prepare the accounts tab for display.
  */
-function prepareAccountsTab() {
-    populateAuthAccounts()
-    bindAuthAccountSelect()
-    bindAuthAccountLogOut()
+async function prepareAccountsTab() {
+    const { microsoftAuthAccountStr, mojangAuthAccountStr } = await populateAuthAccounts();
+    settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr;
+    settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr;
+    bindAuthAccountSelect();
+    bindAuthAccountLogOut();
 }
 
 /**
