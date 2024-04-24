@@ -141,27 +141,61 @@ document.getElementById('avatarOverlay').onclick = async e => {
         settingsNavItemListener(document.getElementById('settingsNavAccount'), false)
     })
 }
+// Defina uma variável externa para armazenar o resultado base64
 
-// Bind selected account
-function updateSelectedAccount(authUser){
-    let username = Lang.queryJS('landing.selectedAccount.noAccountSelected')
-    if(authUser != null){
+// Função para buscar a imagem e converter para base64
+async function fetchSkinAndConvertToBase64(username) {
+    try {
+        const timestamp = new Date().getTime(); // Adiciona um timestamp único
+        const skinURL = `https://zsmpskinserver.000webhostapp.com/skins/${username}.png?timestamp=${timestamp}`;
+
+        const response = await fetch(skinURL);
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar a imagem do usuário: ' + response.status);
+        }
+
+        const blob = await response.blob();
+
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(reader.result.split(',')[1]);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error('Erro ao buscar e converter a imagem:', error);
+        return 'NiceTryFeds';
+    }
+}
+
+// Função para atualizar a conta selecionada
+async function updateSelectedAccount(authUser) {
+    let username = Lang.queryJS('landing.selectedAccount.noAccountSelected');
+    if (authUser.uuid != null) {
         if(authUser.displayName != null){
-            username = authUser.displayName
-            if(authUser.displayName == "L3o___"){
-                username = "🤓" + authUser.displayName;
-                 }
-            if(authUser.displayName == "Jonyox"){
-                username = "🥸" + authUser.displayName;
-                 }
-            if(authUser.displayName == "KonanSori"){
-                username = "🪻" + authUser.displayName;
-                 }
+            username = authUser.displayName;
+            try {
+                // Chama a função fetchSkinAndConvertToBase64 com o nome de usuário do usuário selecionado
+                const result = await fetchSkinAndConvertToBase64(authUser.username);
+                // Armazena o resultado em base64 na variável global base64Image
+                window.base64Image = result;
+                // Atualiza a imagem de perfil na interface do usuário
+                const encodedBase64 = encodeURIComponent(result);
+                const imageURL = `https://visage.surgeplay.com/bust/256/${encodedBase64}`;
+                document.getElementById('avatarContainer').style.backgroundImage = `url('${imageURL}')`;
+            } catch (error) {
+                console.error('Erro ao buscar e converter a imagem:', error);
+            }
         }
     }
-    user_text.innerHTML = username
+    user_text.innerHTML = username;
 }
-updateSelectedAccount(ConfigManager.getSelectedAccount())
+
+// Chamada para atualizar a conta selecionada
+updateSelectedAccount(ConfigManager.getSelectedAccount());
 
 // Bind selected server
 function updateSelectedServer(serv){
