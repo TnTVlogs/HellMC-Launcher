@@ -2,16 +2,16 @@
 title = "DreamClouds Studios Launcher"
 
 [ejs.landing]
-mediaGitHubURL = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
+mediaGitHubURL = "https://github.com/DreamCloud-Development/Launcher"
 mediaTwitterURL = "#"
 mediaInstagramURL = "#"
-mediaWebsiteURL = "https://zelthoriaismp.cloud"
+mediaWebsiteURL = "https://dreamclouds.fr"
 mediaYouTubeURL = "https://www.tiktok.com/@_zsmp_"
-mediaDiscordURL = "https://discord.gg/zsmp"
+mediaDiscordURL = "https://dsc.gg/dreamclouds"
 
 [ejs.settings]
-sourceGithubLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
-supportLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
+sourceGithubLink = "https://github.com/DreamCloud-Development/Launcher"
+supportLink = "https://github.com/DreamCloud-Development/Launcher/issues"
 
 [ejs.welcome]
 welcomeHeader = "Bienvenu sur le launcher des DreamClouds"
