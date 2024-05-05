@@ -627,7 +627,7 @@ let base64Image = '';
 async function fetchSkinAndConvertToBase64(username) {
     try {
         const timestamp = new Date().getTime(); // Adiciona um timestamp único
-        const skinURL = `https://zsmpskinserver.000webhostapp.com/skins/${username}.png?timestamp=${timestamp}`;
+        const skinURL = `https://skinsapi.zelthoriaismp.cloud/skins/${username}.png?timestamp=${timestamp}`;
 
         const response = await fetch(skinURL);
 
@@ -1501,7 +1501,7 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/ci2bx/LunexLauncher/releases.atom',
+        url: 'https://github.com/Shisuiicaro/Hasta-studios-Launcher/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')
@@ -1639,7 +1639,7 @@ document.addEventListener('DOMContentLoaded', function() {
 var skinUploaderWindow;
 
 function openSkinUploader() {
-    var url = 'https://zsmpskinserver.000webhostapp.com/index.html';
+    var url = 'https://skinsapi.zelthoriaismp.cloud';
     skinUploaderWindow = window.open(url, '_blank', 'width=600,height=900');
     
     // Verifica periodicamente se a URL mudou para upload_skin.php
