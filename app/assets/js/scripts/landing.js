@@ -147,7 +147,7 @@ document.getElementById('avatarOverlay').onclick = async e => {
 async function fetchSkinAndConvertToBase64(username) {
     try {
         const timestamp = new Date().getTime(); // Adiciona um timestamp único
-        const skinURL = `https://zsmpskinserver.000webhostapp.com/skins/${username}.png?timestamp=${timestamp}`;
+        const skinURL = `https://skinsapi.zelthoriaismp.cloud/skins/${username}.png?timestamp=${timestamp}`;
 
         const response = await fetch(skinURL);
 
@@ -167,7 +167,7 @@ async function fetchSkinAndConvertToBase64(username) {
         });
     } catch (error) {
         console.error('Erro ao buscar e converter a imagem:', error);
-        return 'NiceTryFeds';
+        return 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAXBJREFUeF7tmzGOwjAQReMr5Cocia2oodqaarfeCm7EWXIFI7ZCEOXL+lgflJcqkj2Z8Z8/f4JxyiCuWmtVc5bGSynFse9tK4MDABhACaABjhAhgnSBN2+DbptzyuNmmy6RAgBmn18NA8ZxHKZp+l/v/T0AmAigAeE2iQjSBcwu8FTDl0s9fG9nleHneB7qZrOoGkoTVMKU/aNzuwTmANjtv2YX+fd7AoBVMGBVJWC+BnQ3V5pga0D3FZgOAEC8aMEA1VdNBsbNKQFKYHlLDg1AA8wfQ3GVEwEggoigEMF3p3Dv+OT5gN4BpJ8PAOkMpP3DgHQG0v5hQDoDaf8wIJ2BtH8YkM5A2j8MSGcg7R8GpDOQ9v9yBqg9RrVF5dq3AgoArYip+W4GXXsV39MJkVYDNd9dgGuv4ns5ACrg1oBa5ytNUc+zNQAAwn+swADzpCkloERCjaMBaID3XaFimBpHBBFB76s0uoCqMTX+6V3gCs6tCFA/mZVnAAAAAElFTkSuQmCC';
     }
 }
 
