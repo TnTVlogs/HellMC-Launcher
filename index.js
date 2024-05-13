@@ -16,7 +16,9 @@ const DiscordWrapper                    = require('./app/assets/js//discordwrapp
 
 
 // Setup Lang
-LangLoader.setupLanguage()
+const dir = path.join(app.getPath('userData'), 'config.json')
+LangLoader.setupLanguage(dir)
+
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {

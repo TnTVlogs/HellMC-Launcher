@@ -128,7 +128,8 @@ launcherUpdatesHeaderDesc = "Download, install, and review updates for the launc
 checkForUpdates = "Check for Updates"
 whatsNew = "What's New"
 updateReleaseNotes = "Update Release Notes"
-
+skintext = "Change Skin"
+skinbutton = "Upload Skin"
 [ejs.waiting]
 waitingText = "Waiting for Microsoft.."
 
@@ -236,7 +237,7 @@ cancelButton = "Cancel"
 username = "Username"
 uuid = "UUID"
 selectAccount = "Select Account"
-selectedAccount = "Selected Account ✓"
+selectedAccount = "Selected Account ?"
 logout = "Log Out"
 
 [js.settings.dropinMods]

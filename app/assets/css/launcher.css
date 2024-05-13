@@ -4027,7 +4027,7 @@ position: absolute;
         transparent 25%, transparent 50%, 
         rgb(255 255 255) 50%, rgb(255 255 255) 75%,
         transparent 75%, transparent); 
-  animation: progressAnimationStrike 08s;
+  animation: progressAnimationStrike 04s;
 }
 
 @keyframes progressAnimationStrike {

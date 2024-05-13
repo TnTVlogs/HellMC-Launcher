@@ -12,6 +12,9 @@ mediaDiscordURL = "https://discord.gg/zsmp"
 [ejs.settings]
 sourceGithubLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
 supportLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
+selectLanguage = "Select a Language"
+changeLanguageTitle = "Change the launcher language"
+changeLanguageDesc = "You can change the language in the list below. This text will not change if you change the language so you can find your wayback here to change it back"
 
 [ejs.welcome]
 welcomeHeader = "BEM-VINDO AO ZSMP"
@@ -22,3 +25,5 @@ Mas espera, tem mais! Para participar da diversão, basta entrar no nosso servid
 
 Então, o que você está esperando? Clique em "Continuar" e deixe as aventuras começarem!
 """
+[ejs.overlay]
+changedLanguageHeader = "You changed the previous language"

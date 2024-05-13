@@ -3,12 +3,13 @@ const { LoggerUtil } = require('helios-core')
 const os   = require('os')
 const path = require('path')
 const logger = LoggerUtil.getLogger('ConfigManager')
+const app = require('@electron/remote').app
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
 const dataPath = path.join(sysRoot, '.hastastudios')
 
-const launcherDir = require('@electron/remote').app.getPath('userData')
+const launcherDir = app.getPath('userData')
 
 /**
  * Retrieve the absolute path of the launcher directory.
@@ -83,6 +84,7 @@ const DEFAULT_CONFIG = {
             launchDetached: true
         },
         launcher: {
+            language: 'en_US',
             resWidth: 1920,
             resHeight: 1080,
             allowPrerelease: false,
@@ -801,4 +803,36 @@ exports.getAllowPrerelease = function(def = false){
  */
 exports.setAllowPrerelease = function(allowPrerelease){
     config.settings.launcher.allowPrerelease = allowPrerelease
+}
+
+exports.getCurrentLanguage = function(def = false){
+    return !def ? config.settings.launcher.language : DEFAULT_CONFIG.settings.launcher.language
+}
+
+/**
+ * Change the current language
+ * 
+ * @param {boolean} lang The language that should be selected
+ */
+exports.setLanguage = function(lang){
+    config.settings.launcher.language = lang
+    exports.save()
+    app.relaunch()
+    app.quit()
+}
+
+/**
+ * Get the list of all available languages
+ * 
+ * @param {function} callback
+ */
+exports.getAllLanguages = function(callback) {
+    fs.readdir('./app/assets/lang/', (err, files) => {
+        if (err) {
+            callback(err)
+        } else {
+            const fileNames = files.map(file => file.replace('.toml', ''))
+            callback(null, fileNames)
+        }
+    })
 }

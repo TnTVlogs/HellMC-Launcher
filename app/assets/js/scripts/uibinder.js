@@ -148,13 +148,7 @@ async function showMainUI(data){
                 $('#loadSpinnerImage').removeClass('rotating')
             })
         }, 150)
-        
-    }, 8000 )
-
-    // Disable tabbing to the news container.
-    initNews().then(() => {
-        $('#newsContainer *').attr('tabindex', '-1')
-    })
+            }, 1000 )
 }
 
 function showFatalStartupError(){
@@ -183,7 +177,6 @@ function showFatalStartupError(){
 function onDistroRefresh(data){
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
-    initNews()
     syncModConfigurations(data)
     ensureJavaSettings(data)
 }
