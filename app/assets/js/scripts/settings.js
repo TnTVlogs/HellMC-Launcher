@@ -1,10 +1,13 @@
-// Requirements
+﻿// Requirements
 const os     = require('os')
 const semver = require('semver')
 
-const DropinModUtil  = require('./assets/js/dropinmodutil')
 const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants')
+const fs = require('fs-extra');
 
+const LangLoader                                   = require('./assets/js/langloader')
+const DropinModUtil                                = require('./assets/js/dropinmodutil')
+const logger = LoggerUtil.getLogger('Settings')
 const settingsState = {
     invalid: new Set()
 }
@@ -326,7 +329,7 @@ function fullSettingsSave() {
     saveModConfiguration()
     ConfigManager.save()
     saveDropinModConfiguration()
-    saveShaderpackSettings()
+
 }
 
 /* Closes the settings view and saves all data. */
@@ -621,100 +624,115 @@ function refreshAuthAccountSelected(uuid){
 const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')
 const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
 
-/**
- * Add auth account elements for each one stored in the authentication database.
- */
+// Defina uma variável externa para armazenar o resultado base64
+let base64Image = '';
+
+// Função para buscar a imagem e converter para base64
 async function fetchSkinAndConvertToBase64(username) {
-  try {
-    const skinURL = `https://auth.zelthoriaismp.cloud/skin/${username}.png`;
-    const response = await fetch(skinURL);
-
-    if (!response.ok) {
-      throw new Error('Error fetching skin image: ' + response.status);
-    }
-
-    const blob = await response.blob();
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result.split(',')[1]);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    return 'MHF_Question';
-  }
-}
-    
-async function populateAuthAccounts() {
-  const authAccounts = ConfigManager.getAuthAccounts();
-  const authKeys = Object.keys(authAccounts);
-  if (authKeys.length === 0) {
-    return;
-  }
-  const selectedUUID = ConfigManager.getSelectedAccount().uuid;
-
-  let microsoftAuthAccountStr = '';
-  let mojangAuthAccountStr = '';
-
-  for (const val of authKeys) {
-    const acc = authAccounts[val];
-
     try {
-      const base64modifier = await fetchSkinAndConvertToBase64(acc.displayName);
+        const timestamp = new Date().getTime(); // Adiciona um timestamp único
+        const skinURL = `https://skinsapi.zelthoriaismp.cloud/skins/${username}.png?timestamp=${timestamp}`;
 
-      if (base64modifier !== null) {
-        const finalURL = `https://visage.surgeplay.com/bust/512/${encodeURIComponent(base64modifier)}`;
+        const response = await fetch(skinURL);
 
-        const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
-          <div class="settingsAuthAccountLeft">
-          <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="${finalURL}">
-          </div>
-          <div class="settingsAuthAccountRight">
-            <div class="settingsAuthAccountDetails">
-              <div class="settingsAuthAccountDetailPane">
-                <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.username')}</div>
-                <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
-              </div>
-              <div class="settingsAuthAccountDetailPane">
-                <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.uuid')}</div>
-                <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
-              </div>
-            </div>
-            <div class="settingsAuthAccountActions">
-              <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.authAccountPopulate.selectedAccount') : '>' + Lang.queryJS('settings.authAccountPopulate.selectAccount')}</button>
-              <div class="settingsAuthAccountWrapper">
-                <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.authAccountPopulate.logout')}</button>
-              </div>
-            </div>
-          </div>
-        </div>`;
-
-        if (acc.type === 'microsoft') {
-          microsoftAuthAccountStr += accHtml;
-        } else {
-          mojangAuthAccountStr += accHtml;
+        if (!response.ok) {
+            throw new Error('Erro ao buscar a imagem da skin: ' + response.status);
         }
-      }
-    } catch (error) {
-      // Handle error silently
-    }
-  }
 
-  settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr;
-  settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr;
+        const blob = await response.blob();
+
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(reader.result.split(',')[1]);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error('Erro ao buscar e converter a imagem:', error);
+        return 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAXBJREFUeF7tmzGOwjAQReMr5Cocia2oodqaarfeCm7EWXIFI7ZCEOXL+lgflJcqkj2Z8Z8/f4JxyiCuWmtVc5bGSynFse9tK4MDABhACaABjhAhgnSBN2+DbptzyuNmmy6RAgBmn18NA8ZxHKZp+l/v/T0AmAigAeE2iQjSBcwu8FTDl0s9fG9nleHneB7qZrOoGkoTVMKU/aNzuwTmANjtv2YX+fd7AoBVMGBVJWC+BnQ3V5pga0D3FZgOAEC8aMEA1VdNBsbNKQFKYHlLDg1AA8wfQ3GVEwEggoigEMF3p3Dv+OT5gN4BpJ8PAOkMpP3DgHQG0v5hQDoDaf8wIJ2BtH8YkM5A2j8MSGcg7R8GpDOQ9v9yBqg9RrVF5dq3AgoArYip+W4GXXsV39MJkVYDNd9dgGuv4ns5ACrg1oBa5ytNUc+zNQAAwn+swADzpCkloERCjaMBaID3XaFimBpHBBFB76s0uoCqMTX+6V3gCs6tCFA/mZVnAAAAAElFTkSuQmCC';
+    }
 }
 
+// Função para popular as contas de autenticação
+async function populateAuthAccounts(){
+    const authAccounts = ConfigManager.getAuthAccounts();
+    const authKeys = Object.keys(authAccounts);
+    if(authKeys.length === 0){
+        return;
+    }
+    const selectedUUID = ConfigManager.getSelectedAccount().uuid;
+
+    let microsoftAuthAccountStr = '';
+    let mojangAuthAccountStr = '';
+
+    // Array para armazenar todas as promessas
+    const promises = [];
+
+    authKeys.forEach((val) => {
+        const acc = authAccounts[val];
+
+        // Adicione a promessa à matriz de promessas
+        promises.push(
+            fetchSkinAndConvertToBase64(acc.displayName)
+                .then(result => {
+                    // Use base64Image aqui para construir a URL da imagem
+                    const encodedBase64 = encodeURIComponent(result);
+                    const skinURL = `https://visage.surgeplay.com/bust/256/${encodedBase64}`;
+
+                    const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
+                        <div class="settingsAuthAccountLeft">
+                        <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="${skinURL}">
+                        </div>
+                        <div class="settingsAuthAccountRight">
+                            <div class="settingsAuthAccountDetails">
+                                <div class="settingsAuthAccountDetailPane">
+                                    <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.username')}</div>
+                                    <div class="settingsAuthAccountDetailValue">${acc.displayName}</div>
+                                </div>
+                                <div class="settingsAuthAccountDetailPane">
+                                    <div class="settingsAuthAccountDetailTitle">${Lang.queryJS('settings.authAccountPopulate.uuid')}</div>
+                                    <div class="settingsAuthAccountDetailValue">${acc.uuid}</div>
+                                </div>
+                            </div>
+                            <div class="settingsAuthAccountActions">
+                                <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>' + Lang.queryJS('settings.authAccountPopulate.selectedAccount') : '>' + Lang.queryJS('settings.authAccountPopulate.selectAccount')}</button>
+                                <div class="settingsAuthAccountWrapper">
+                                    <button class="settingsAuthAccountLogOut">${Lang.queryJS('settings.authAccountPopulate.logout')}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                    if (acc.type === 'microsoft') {
+                        microsoftAuthAccountStr += accHtml;
+                    } else {
+                        mojangAuthAccountStr += accHtml;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar e converter a imagem:', error);
+                })
+        );
+    });
+
+    // Aguarde a conclusão de todas as promessas antes de retornar
+    await Promise.all(promises);
+
+    // Atualize as contas de autenticação depois de receber todas as imagens
+    return { microsoftAuthAccountStr, mojangAuthAccountStr };
+}
 
 /**
  * Prepare the accounts tab for display.
  */
-function prepareAccountsTab() {
-    populateAuthAccounts()
-    bindAuthAccountSelect()
-    bindAuthAccountLogOut()
+async function prepareAccountsTab() {
+    const { microsoftAuthAccountStr, mojangAuthAccountStr } = await populateAuthAccounts();
+    settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr;
+    settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr;
+    bindAuthAccountSelect();
+    bindAuthAccountLogOut();
 }
 
 /**
@@ -767,6 +785,9 @@ function parseModulesForUI(mdls, submodules, servConf){
 
     let reqMods = ''
     let optMods = ''
+
+    resolveLanguageForUI()
+
 
     for(const mdl of mdls){
 
@@ -877,7 +898,7 @@ function _saveModConfiguration(modConf){
             }
         }
     }
-    return modConf
+  return modConf
 }
 
 // Drop-in mod elements.
@@ -934,7 +955,7 @@ function bindDropinModsRemoveButton(){
                 setOverlayContent(
                     Lang.queryJS('settings.dropinMods.deleteFailedTitle', { fullName }),
                     Lang.queryJS('settings.dropinMods.deleteFailedMessage'),
-                    Lang.queryJS('settings.dropinMods.okButton')
+                    Lang.queryJS('settings.okButton')
                 )
                 setOverlayHandler(null)
                 toggleOverlay(true)
@@ -1012,12 +1033,74 @@ document.addEventListener('keydown', async (e) => {
     }
 })
 
+document.addEventListener('keydown', async (e) => {
+    if(getCurrentView() === VIEWS.settings && selectedSettingsTab === 'settingsTabLauncher'){
+        if(e.key === 'F5'){
+            await resolveLanguageForUI()
+        }
+    }
+})
+
+
 async function reloadDropinMods(){
     await resolveDropinModsForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
     bindModsToggleSwitch()
 }
+
+//Languages
+let langCodes = {
+    "ja_JP": "日本人",
+    "en_US": "English",
+    "es_ES": "Español",
+    "fr_FR": "Français",
+    "ko_KR": "한국어",
+    "pt_BR": "Português"
+} 
+
+async function resolveLanguageForUI() {
+    let LANGUAGES, SELECTED_LANGUAGE;
+
+    ConfigManager.getAllLanguages((err, languages) => {
+        if (err) {
+            console.error("Error:", err);
+        } else {
+            logger.info("Available languages:", languages);
+            LANGUAGES = languages;
+            SELECTED_LANGUAGE = ConfigManager.getCurrentLanguage();
+            setCurrentLanguageInUi(LANGUAGES, SELECTED_LANGUAGE);
+        }
+    });
+}
+
+
+function setCurrentLanguageInUi(arr, selected){
+    const cont = document.getElementById('settingsLangsOptions')
+    cont.innerHTML = ''
+    for(let opt of arr) {
+        const d = document.createElement('DIV')
+        d.innerHTML = langCodes[opt]
+        d.setAttribute('value', opt)
+        if(opt !== "_custom") {
+            if(opt === selected) {
+                d.setAttribute('selected', '')
+                document.getElementById('settingsLangSelected').innerHTML = langCodes[opt]
+            }
+            d.addEventListener('click', function(e) {
+                this.parentNode.previousElementSibling.innerHTML = this.innerHTML
+                for(let sib of this.parentNode.children){
+                    sib.removeAttribute('selected')
+                }
+                this.setAttribute('selected', '')
+                closeSettingsSelect()
+                ConfigManager.setLanguage(opt)
+            })  
+            cont.appendChild(d)
+        }
+    }
+}
+
 
 // Shaderpack
 
@@ -1147,6 +1230,7 @@ function saveAllModConfigurations(){
     saveModConfiguration()
     ConfigManager.save()
     saveDropinModConfiguration()
+    saveShaderpackSettings()
 }
 
 /**
@@ -1164,12 +1248,12 @@ function animateSettingsTabRefresh(){
  * Prepare the Mods tab for display.
  */
 async function prepareModsTab(first){
-    await resolveModsForUI()
     await resolveDropinModsForUI()
     await resolveShaderpacksForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
     bindShaderpackButton()
+    await resolveModsForUI()
     bindModsToggleSwitch()
     await loadSelectedServerOnModsTab()
 }
@@ -1413,7 +1497,6 @@ function bindMinMaxRam(server) {
     settingsMinRAMRange.setAttribute('max', SETTINGS_MAX_MEMORY)
     settingsMinRAMRange.setAttribute('min', SETTINGS_MIN_MEMORY)
 }
-
 /**
  * Prepare the Java tab for display.
  */
@@ -1487,7 +1570,7 @@ function populateAboutVersionInformation(){
  */
 function populateReleaseNotes(){
     $.ajax({
-        url: 'https://github.com/dscalzi/HeliosLauncher/releases.atom',
+        url: 'https://github.com/Shisuiicaro/Hasta-studios-Launcher/releases.atom',
         success: (data) => {
             const version = 'v' + remote.app.getVersion()
             const entries = $(data).find('entry')
@@ -1611,6 +1694,30 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var enviarSkinButton = document.getElementById('enviarSkinButton');
+    if (enviarSkinButton) {
+        enviarSkinButton.addEventListener('click', function() {
+            openSkinUploader();
+        });
+    }
+});
+
+var skinUploaderWindow;
+
+function openSkinUploader() {
+    var url = 'https://skinsapi.zelthoriaismp.cloud';
+    skinUploaderWindow = window.open(url, '_blank', 'width=600,height=900');
+    
+    // Verifica periodicamente se a URL mudou para upload_skin.php
+    var checkURLChange = setInterval(function() {
+        if (skinUploaderWindow && skinUploaderWindow.location.href.includes('upload_skin.php')) {
+            clearInterval(checkURLChange);
+            skinUploaderWindow.close();
+        }
+    }, 1000);
 }
 
 // Prepare the settings UI on startup.
