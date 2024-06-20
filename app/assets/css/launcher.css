@@ -1558,7 +1558,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Left hand side of an auth account element, for the skin image. */
 .settingsAuthAccountLeft {
-    padding: 5px -1px 5px 20px;
+    padding: 5px 5px 5px 20px;
 }
 
 /* Image of the auth account's skin. */
@@ -2969,12 +2969,13 @@ input:checked + .toggleSwitchSlider:before {
 }
 
 /* User profile avatar container. */
-/* Avatar container */
 #avatarContainer {
+    border-radius: 50%;
+    border: 2px solid #cad7e1;
     box-sizing: border-box;
     background: rgba(1, 2, 1, 0.5);
-    height: 60px;
-    width: 60px;
+    height: 70px;
+    width: 70px;
     box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     overflow: hidden;
     position: relative;
@@ -2983,7 +2984,7 @@ input:checked + .toggleSwitchSlider:before {
     background-size: contain;
 }
 
-/* Avatar overlay */
+/* Avatar edit overlay. */
 #avatarOverlay {
     opacity: 0;
     position: absolute;
@@ -2994,24 +2995,23 @@ input:checked + .toggleSwitchSlider:before {
     transition: 0.25s ease;
     font-weight: bold;
     letter-spacing: 2px;
-    background-color: rgba(0, 0, 0, 0.00);
+    background-color: rgba(0, 0, 0, 0.35);
     -webkit-user-select: none;
+    border: none;
     cursor: pointer;
     width: 100%;
     height: 100%;
-    border: none;
+    border-radius: 50%;
+}
+#avatarOverlay:hover,
+#avatarOverlay:focus {
+    opacity: 1;
+}
+#avatarOverlay:active {
+    background-color: rgba(0, 0, 0, 0.45);
 }
 
-    #avatarOverlay:hover,
-    #avatarOverlay:focus {
-        opacity: 1;
-    }
-
-    #avatarOverlay:active {
-        background-color: rgba(0, 0, 0, 0.00);
-    }
-
-/* User profile name text */
+/* User profile name text. */
 #user_text {
     font-size: 12px;
     min-width: 135px;
@@ -3019,11 +3019,9 @@ input:checked + .toggleSwitchSlider:before {
     letter-spacing: 1px;
     text-shadow: 0px 0px 20px black;
     position: absolute;
-    bottom: -25px; /* Ajuste conforme necessário */
-    left: 50%; /* Posiciona o texto centralizado horizontalmente */
-    transform: translateX(-50%); /* Ajuste para centralizar o texto */
+    right: 95px;
+    text-align: right;
     -webkit-user-select: initial;
-    text-align: center;
 }
 
 /* Social media icon content container. */
@@ -3031,9 +3029,9 @@ input:checked + .toggleSwitchSlider:before {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-top: 35px;
+    margin-top: 25px;
     height: calc(100% - 95px);
-    width: 60px;
+    width: 70px;
     align-items: center;
 }
 
@@ -3330,7 +3328,6 @@ input:checked + .toggleSwitchSlider:before {
     border: none;
     cursor: pointer;
     outline: none;
-    display: none;
 }
 #newsButton:hover #newsButtonText,
 #newsButton:focus #newsButtonText {
