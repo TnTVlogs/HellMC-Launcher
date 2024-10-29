@@ -1,9 +1,9 @@
 
-<img src="https://zelthoriaismp.cloud/Launcher/assets/logo.png" alt="Logo" width="450">
+<img src="example.com" alt="Logo" width="450">
 
-# Hasta Studios Launcher
+# HellMC Launcher
 
-A custom launcher for all Hasta Studios projects.
+A custom launcher for all TnTVlogs projects.
 
 ![Launcher Screenshot](https://zelthoriaismp.cloud/launcher2.png)
 
