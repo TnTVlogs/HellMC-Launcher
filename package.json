@@ -1,13 +1,13 @@
 {
-  "name": "HastaStudiosLauncher",
-  "version": "1.2.7",
-  "productName": "Hasta studios Launcher",
-  "description": "Hasta studios launcher",
-  "author": "Shisuys",
+  "name": "HellMC-Launcher",
+  "version": "1.0.0",
+  "productName": "HellMC Launcher",
+  "description": "Launcher oficial de HellMC",
+  "author": "TnTVlogs",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/Shisuiicaro/Hasta-studios-Launcher",
+  "homepage": "https://github.com/TnTVlogs/HellMC-Launcher",
   "bugs": {
-    "url": "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
+    "url": "https://github.com/TnTVlogs/HellMC-Launcher/issues"
   },
   "private": true,
   "main": "index.js",
@@ -49,6 +49,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shisuiicaro/Hasta-studios-Launcher.git"
+    "url": "git+https://github.com/TnTVlogs/HellMC-Launcher.git"
   }
 }

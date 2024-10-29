@@ -1,29 +1,29 @@
 [ejs.app]
-title = "Hasta Studios Launcher"
+title = "HellMC Launcher"
 
 [ejs.landing]
-mediaGitHubURL = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
+mediaGitHubURL = "https://github.com/TnTVlogs/HellMC-Launcher"
 mediaTwitterURL = "#"
 mediaInstagramURL = "#"
-mediaWebsiteURL = "https://zelthoriaismp.cloud"
-mediaYouTubeURL = "https://www.tiktok.com/@_zsmp_"
-mediaDiscordURL = "https://discord.gg/zsmp"
+mediaWebsiteURL = "https://hellmc.sytes.net"
+mediaYouTubeURL = "https://www.tiktok.com/@tntvlogs_"
+mediaDiscordURL = "https://discord.gg/yScnSw7cFt"
 
 [ejs.settings]
-sourceGithubLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher"
-supportLink = "https://github.com/Shisuiicaro/Hasta-studios-Launcher/issues"
+sourceGithubLink = "https://github.com/TnTVlogs/HellMC-Launcher"
+supportLink = "https://github.com/TnTVlogs/HellMC-Launcher/issues"
 selectLanguage = "Select a Language"
 changeLanguageTitle = "Change the launcher language"
 changeLanguageDesc = "You can change the language in the list below. This text will not change if you change the language so you can find your wayback here to change it back"
 
 [ejs.welcome]
-welcomeHeader = "BEM-VINDO AO ZSMP"
+welcomeHeader = "Bienvenido al Launcher de HellMC"
 welcomeDescription = """
-Bem-vindo ao ZSMP, onde sua aventura no Minecraft começa! Mergulhe em um mundo de possibilidades infinitas e experiências inesquecíveis no melhor servidor SMP que você pode imaginar. Junte-se à nossa vibrante comunidade de jogadores e embarque em missões épicas, construa criações incríveis e forje amizades duradouras.
+¡Prepárate para una experiencia Minecraft épica!
 
-Mas espera, tem mais! Para participar da diversão, basta entrar no nosso servidor do Discord para se auto-inscrever e ter acesso ao nosso reino exclusivo de emoções. Seja você um explorador experiente ou um construtor novato, o ZSMP dá as boas-vindas a jogadores de todos os níveis de habilidade.
+HellMC Launcher te ofrece una forma personalizada, fácil y optimizada de jugar a Minecraft.
 
-Então, o que você está esperando? Clique em "Continuar" e deixe as aventuras começarem!
+Descubre un mundo de posibilidades con mods, servidores y más.
 """
 [ejs.overlay]
 changedLanguageHeader = "You changed the previous language"

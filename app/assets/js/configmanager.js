@@ -8,7 +8,7 @@ const app = require('@electron/remote').app
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
-const dataPath = path.join(sysRoot, '.hastastudios')
+const dataPath = path.join(sysRoot, '.hellmclauncher')
 
 const launcherDir = app.getPath('userData')
 
@@ -78,16 +78,16 @@ function resolveSelectedRAM(ram) {
 const DEFAULT_CONFIG = {
     settings: {
         game: {
-            resWidth: 1920,
-            resHeight: 1080,
+            resWidth: 1280,
+            resHeight: 720,
             fullscreen: false,
             autoConnect: true,
             launchDetached: true
         },
         launcher: {
             language: 'en_US',
-            resWidth: 1920,
-            resHeight: 1080,
+            resWidth: 1280,
+            resHeight: 720,
             allowPrerelease: false,
             dataDirectory: dataPath
         }
@@ -804,8 +804,6 @@ exports.getAllowPrerelease = function(def = false){
  */
 exports.setAllowPrerelease = function(allowPrerelease){
     config.settings.launcher.allowPrerelease = allowPrerelease
-}
-
 }
 
 exports.getCurrentLanguage = function(def = false){

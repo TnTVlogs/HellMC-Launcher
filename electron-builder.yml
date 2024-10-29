@@ -1,8 +1,8 @@
-appId: 'HastaStudiosLauncher'
-productName: 'Hasta Studios Launcher'
+appId: 'HellMCLauncher'
+productName: 'HellMC Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2024 Hasta Studios'
+copyright: 'Copyright © 2024 TnTVlogs'
 
 asar: true
 compression: 'maximum'
@@ -40,10 +40,10 @@ mac:
 # Linux Configuration
 linux: 
   target: 'AppImage'
-  maintainer: 'Shisuys'
-  vendor: 'Hasta Studios Launcher'
+  maintainer: 'TnTVlogs'
+  vendor: 'HellMC Launcher'
   synopsis: 'A minecraft launcher'
-  description: 'Custom launcher made by shisuys, to support all Hasta Studios Projects.'
+  description: 'Custom launcher made by TnTVlogs.'
   category: 'Game'
 
 

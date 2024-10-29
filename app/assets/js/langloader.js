@@ -17,15 +17,7 @@ let lang
  */
 
 exports.loadLanguage = function(id){
-    if(isDev){
-        lang = merge(lang || {}, toml.parse(fs.readFileSync(path.join(process.cwd(), 'lang', `${id}.toml`))) || {})
-    } else {
-        if(process.platform === 'darwin'){
-            lang = merge(lang || {}, toml.parse(fs.readFileSync(path.join(process.cwd(), 'Content', 'Resources', 'lang', `${id}.toml`))) || {})
-    } else {
-        lang = merge(lang || {}, toml.parse(fs.readFileSync(path.join(process.cwd(), 'resources', 'lang', `${id}.toml`))) || {})
-}
-}
+    lang = merge(lang || {}, toml.parse(fs.readFileSync(path.join(__dirname, '..', 'lang', `${id}.toml`))) || {})
 }
 
 exports.query = function(id, placeHolders){

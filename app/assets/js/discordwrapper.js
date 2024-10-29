@@ -15,11 +15,11 @@ exports.initRPC = function(){
 
     activity = {
         details: Lang.queryJS('discord.starting'),
-        largeImageKey: "hastaicone",
-        largeImageText: "MADE BY SHISUYS",
+        largeImageKey: "oig",
+        largeImageText: "MADE BY TNTVLOGS",
         buttons: [
-            { label: "Our Discord", url: "https://discord.gg/zsmp" },
-            { label: "ZSMP WEBSITE", url: "https://zelthoriaismp.cloud" }
+            { label: "Discord", url: "https://discord.gg/yScnSw7cFt" },
+            { label: "HellMC WEBSITE", url: "https://hellmc.sytes.net" }
         ],
         instance: false
     }
@@ -29,7 +29,7 @@ exports.initRPC = function(){
         client.setActivity(activity)
     })
     
-    client.login({clientId: "1115084046716903484"}).catch(error => {
+    client.login({clientId: "1187034841716379699"}).catch(error => {
         if(error.message.includes('ENOENT')) {
             logger.info('Unable to initialize Discord Rich Presence, no client detected.')
         } else {
